@@ -28,15 +28,13 @@ architecture rtl of Accumulator is
           retv : out int8_t);
   end component;
 
-  component UART
-    port(CLK : in std_logic;
-         RxD : in std_logic;
-         TxD : out std_logic;
-         DOUT : out std_logic_vector(7 downto 0);
-         DIN : in std_logic_vector(7 downto 0);
-         Tx_GO : in std_logic;
-         Rx_BUSY : out std_logic;
-         Tx_BUSY : out std_logic);
+  component u232c
+      generic (wtime: std_logic_vector(15 downto 0) := x"1ADB");
+      Port ( clk  : in  STD_LOGIC;
+             data : in  STD_LOGIC_VECTOR (7 downto 0);
+             go   : in  STD_LOGIC;
+             busy : out STD_LOGIC;
+             tx   : out STD_LOGIC);
   end component;
 
   signal pc : std_logic_vector(2 downto 0) := (others => '0');
@@ -59,13 +57,12 @@ begin
               arg2 => alu_arg2,
               retv => acc);
 
-  uart0 : UART
+  u232c0 : u232c
     port map (clk => clk,
-              RxD => RxD,
-              TxD => TxD,
-              DIN => DOUT,
-              Tx_GO => Tx_GO,
-              Tx_BUSY => Tx_BUSY);
+              Tx => TxD,
+              data => DOUT,
+              GO => Tx_GO,
+              BUSY => Tx_BUSY);
 
   process(clk)
     variable icode : code_t;

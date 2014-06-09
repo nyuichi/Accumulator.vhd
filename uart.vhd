@@ -32,11 +32,11 @@ architecture RTL of UART is
 
 begin
   rx0 : Rx
-    generic map(wtime => 578)
+    generic map(wtime => 16#1adb#)
     port map(sysclk => clk, RxD => RxD, DOUT => DOUT, BUSY => Rx_BUSY);
 
   tx0 : Tx
-    generic map(wtime => 578)
+    generic map(wtime => 16#1adb#)
     port map(sysclk => clk, TxD => TxD, DIN => DIN, GO => Tx_GO, BUSY => Tx_BUSY);
 
 end RTL;
